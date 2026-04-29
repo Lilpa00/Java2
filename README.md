@@ -1,137 +1,295 @@
-# java2JAVA2 학습 정리
-## 202330121 이재인
+# Java 상속 정리
 
-# 2주차 - Git 및 GitHub 기초
-Git 주요 개념
-Repository
-프로젝트 파일과 변경 이력을 함께 저장하는 공간 코드 버전 관리의 기본 단위
+## 1. 클래스 상속이란?
 
-Branch
-기존 코드와 분리된 작업 공간 기능 개발이나 테스트 시 사용
+Java에서 상속은 기존 클래스의 기능을 물려받아서 새로운 클래스를 만드는 것이다.
 
-Git 초기 설정 및 기본 명령어
-저장소 생성
-git init
+```java
+class ColorPoint extends Point {
+}
+```
 
-현재 디렉토리를 Git 저장소로 설정 했습니다
+여기서 `Point`는 슈퍼 클래스이고, `ColorPoint`는 서브 클래스이다.
 
-파일 추가
-git add 파일명
+- 슈퍼 클래스: 부모 클래스
+- 서브 클래스: 자식 클래스
 
-특정 파일만 선택적으로 추가 git add .
+서브 클래스 객체는 슈퍼 클래스의 멤버도 함께 가진다.
 
-모든 변경 파일을 한 번에 추가
+예를 들어 `Point` 클래스에 `x`, `y`가 있고, `ColorPoint` 클래스에 `color`가 있다면 `ColorPoint` 객체는 `x`, `y`, `color`를 모두 사용할 수 있다.
 
-커밋 생성
-git commit -m "설명"
+---
 
-변경 내용을 기록으로 저장
+## 2. 상속 예제
 
-원격 저장소 사용
-저장소 복제
-git clone 저장소주소
+```java
+class Point {
+    private int x, y;
 
-원격 저장소를 내 컴퓨터로 복사
+    public void set(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
 
-원격 저장소 연결
-git remote add origin 저장소주소
+    public void showPoint() {
+        System.out.println("(" + x + "," + y + ")");
+    }
+}
 
-로컬 저장소와 GitHub 연결
+class ColorPoint extends Point {
+    private String color;
 
-업로드
-git push -u origin main
+    public void setColor(String color) {
+        this.color = color;
+    }
 
-변경 내용을 원격 저장소에 업로드
+    public void showColorPoint() {
+        System.out.print(color);
+        showPoint();
+    }
+}
+```
 
-브랜치 및 사용자 설정
-기본 브랜치 변경
-git branch -M main
+실행 예시는 다음과 같다.
 
-사용자 정보 설정
-git config --global user.name "이름" git config --global user.email "이메일"
+```java
+ColorPoint cp = new ColorPoint();
+cp.set(3, 4);
+cp.setColor("red");
+cp.showColorPoint();
+```
 
-프로젝트별 설정 시 --global 제거
+출력 결과:
 
-수정 후 업로드 과정
-git add . git commit -m "수정 내용" git push
+```text
+red(3,4)
+```
 
-Markdown 기본 문법
-: 제목 작성
-: 목록 생성 --- : 구분선 코드 : 한 줄 코드 강조
+`ColorPoint` 클래스 안에는 `set()` 메소드가 직접 없지만, `Point` 클래스를 상속받았기 때문에 사용할 수 있다.
 
-# 3주차 - Java 기초 이론
-프로그래밍 언어 개요
-컴퓨터에게 작업을 지시하기 위한 언어 컴퓨터는 0과 1로 구성된 기계어만 이해함
+---
 
-절차 지향 vs 객체 지향
-절차 지향 언어
-순차적인 실행 구조 데이터와 기능이 분리됨 예: C, Pascal
+## 3. 슈퍼 클래스 멤버 접근
 
-객체 지향 언어
-객체 중심 구조 데이터와 기능을 하나로 묶음 예: Java, Python, C++
+서브 클래스가 슈퍼 클래스의 멤버에 접근할 수 있는지는 접근 지정자에 따라 달라진다.
 
-컴파일 과정
-사람이 작성한 코드를 컴퓨터가 이해할 수 있도록 변환 Java: .java → .class
+| 접근 지정자 | 서브 클래스에서 접근 가능 여부 |
+|---|---|
+| `private` | 접근 불가능 |
+| default | 같은 패키지일 때 접근 가능 |
+| `public` | 항상 접근 가능 |
+| `protected` | 같은 패키지이거나 상속 관계일 때 접근 가능 |
 
-Java의 특징
-플랫폼 독립성 (JVM 기반) 객체 지향 지원 자동 메모리 관리 다양한 라이브러리 제공
+### 접근 지정자 정리
 
-JDK와 JRE
-JDK
-개발 도구 + 실행 환경 포함
+```text
+private   : 서브 클래스에서도 직접 접근할 수 없다.
+default   : 같은 패키지 안에서만 접근할 수 있다.
+public    : 어디서든 접근할 수 있다.
+protected : 같은 패키지 또는 상속받은 클래스에서 접근할 수 있다.
+```
 
-JRE
-Java 프로그램 실행 환경
+예시:
 
-주요 실행 도구
-javac : Java 코드 컴파일 java : 프로그램 실행 javadoc : 문서 생성 jar : 파일 압축 및 관리
+```java
+class Parent {
+    private int a;
+    int b;
+    public int c;
+    protected int d;
+}
 
-# 4주차 - Java 심화 개념
-메모리 구조
-Heap : 객체 저장 영역 Stack : 변수 및 함수 실행 영역
+class Child extends Parent {
+    void test() {
+        // a = 1; // private라서 접근 불가
+        b = 2;    // 같은 패키지면 접근 가능
+        c = 3;    // public이라 접근 가능
+        d = 4;    // protected라 접근 가능
+    }
+}
+```
 
-자료형
-기본 타입
-boolean, char, byte, short, int, long, float, double
+---
 
-참조 타입
-클래스, 배열, 인터페이스 등
+## 4. 서브 클래스와 슈퍼 클래스의 생성자
 
-변수와 상수
-변수 : 값 변경 가능 상수 : final 사용, 값 변경 불가
+서브 클래스 객체가 생성될 때는 서브 클래스 생성자만 실행되는 것이 아니라 슈퍼 클래스 생성자도 함께 실행된다.
 
-출력 방법
-System.out.print() : 줄바꿈 없음 System.out.println() : 줄바꿈 있음 System.out.printf() : 형식 지정 출력
+실행 순서는 다음과 같다.
 
-타입 변환
-자동 변환
-작은 타입 → 큰 타입
+```text
+슈퍼 클래스 생성자 실행
+서브 클래스 생성자 실행
+```
 
-강제 변환
-(int) 3.14
+예시:
 
-입력 처리
-System.in
-기본 입력 스트림
+```java
+class Parent {
+    Parent() {
+        System.out.println("부모 생성자");
+    }
+}
 
-Scanner
-다양한 자료형 입력 가능
+class Child extends Parent {
+    Child() {
+        System.out.println("자식 생성자");
+    }
+}
+```
 
-연산자
-산술 : + - * / % 비교 : > < == != 논리 : && || !
+실행 코드:
 
-실습 코드 개요
-Foo.java
-메서드 정의 및 호출
+```java
+Child c = new Child();
+```
 
-Bar.java
-상수 사용 및 계산
+출력 결과:
 
-Hun.java
-형변환 확인
+```text
+부모 생성자
+자식 생성자
+```
 
-Boo.java
-입력 처리 실습
+즉, 자식 객체를 만들면 부모 생성자가 먼저 실행되고 그 다음 자식 생성자가 실행된다.
 
-전체 요약
-Git을 이용한 버전 관리 방법 학습 Java 기본 구조 및 실행 방식 이해 자료형, 연산, 입출력 개념 학습 간단한 코드 실습 진행
+---
+
+## 5. super() 키워드
+
+`super()`는 서브 클래스 생성자에서 슈퍼 클래스 생성자를 직접 호출할 때 사용한다.
+
+```java
+class Parent {
+    Parent(int x) {
+        System.out.println("부모 생성자: " + x);
+    }
+}
+
+class Child extends Parent {
+    Child() {
+        super(10);
+        System.out.println("자식 생성자");
+    }
+}
+```
+
+출력 결과:
+
+```text
+부모 생성자: 10
+자식 생성자
+```
+
+`super()`를 직접 쓰지 않으면 컴파일러가 자동으로 `super();`를 넣는다.
+
+```java
+class Child extends Parent {
+    Child() {
+        // super(); 가 자동으로 들어간다
+        System.out.println("자식 생성자");
+    }
+}
+```
+
+하지만 부모 클래스에 기본 생성자가 없으면 오류가 발생한다.
+이 경우에는 반드시 `super(값)` 형태로 부모 생성자를 직접 호출해야 한다.
+
+---
+
+## 6. Java 파일 실행 방법
+
+Java 파일을 실행하려면 먼저 컴파일을 해야 한다.
+
+```powershell
+javac Midterm.java
+```
+
+컴파일에 성공하면 `.class` 파일이 생성된다.
+
+```text
+Midterm.java   : 내가 작성한 소스 코드 파일
+Midterm.class  : 컴파일된 실행 파일
+```
+
+실행은 다음 명령어로 한다.
+
+```powershell
+java Midterm
+```
+
+주의할 점은 클래스 이름과 파일 이름이 같아야 한다는 것이다.
+
+```java
+public class Midterm
+```
+
+위처럼 클래스 이름이 `Midterm`이면 파일 이름은 반드시 다음과 같아야 한다.
+
+```text
+Midterm.java
+```
+
+---
+
+## 7. 오류 정리
+
+### ClassNotFoundException 오류
+
+```text
+Error: Could not find or load main class Midterm
+```
+
+이 오류는 보통 실행 위치가 잘못되었거나 클래스 이름을 잘못 입력했을 때 발생한다.
+
+해결 방법:
+
+```powershell
+cd C:\Java2\Midterm
+javac Midterm.java
+java Midterm
+```
+
+---
+
+### reached end of file while parsing 오류
+
+```text
+error: reached end of file while parsing
+```
+
+이 오류는 중괄호 `{ }`를 제대로 닫지 않았을 때 발생한다.
+
+잘못된 예:
+
+```java
+public class Midterm {
+```
+
+올바른 예:
+
+```java
+public class Midterm {
+    public static void main(String[] args) {
+
+    }
+}
+```
+
+---
+
+## 8. 핵심 요약
+
+상속은 부모 클래스의 멤버를 자식 클래스가 물려받는 것이다.
+
+`private` 멤버는 자식 클래스에서도 직접 접근할 수 없다.
+
+`public` 멤버는 어디서든 접근할 수 있다.
+
+`protected` 멤버는 같은 패키지이거나 상속 관계일 때 접근할 수 있다.
+
+자식 객체가 생성될 때는 부모 생성자가 먼저 실행되고, 그 다음 자식 생성자가 실행된다.
+
+`super()`는 부모 생성자를 직접 호출할 때 사용한다.
+
+Java 파일은 `javac`로 컴파일한 뒤 `java`로 실행한다.
