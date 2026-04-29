@@ -53,7 +53,7 @@ public class Midterm {
 
 # Java 9주차 
 
-## //상속 정리
+## 상속 정리
 
 ## 1. 클래스 상속이란?
 
@@ -590,3 +590,124 @@ a2.sound();
 ```
 
 이처럼 같은 `sound()` 메소드라도 실제 객체가 무엇인지에 따라 실행 결과가 달라진다.
+
+---
+
+## 16. 동적 바인딩 - 오버라이딩된 메소드 호출
+
+동적 바인딩은 실행할 메소드가 컴파일할 때가 아니라 실행 중에 결정되는 것이다.
+
+오버라이딩된 메소드가 있을 때는 참조 변수의 타입보다 실제 객체의 타입이 더 중요하다.  
+즉, 슈퍼 클래스 타입의 변수로 메소드를 호출해도 실제 객체가 서브 클래스 객체라면 서브 클래스에서 오버라이딩한 메소드가 실행된다.
+
+슬라이드에서는 `SuperObject` 하나만 있는 경우와 `SubObject`가 상속받은 경우를 비교해서 설명한다.
+
+### SuperObject 하나만 있는 경우
+
+```java
+public class SuperObject {
+    protected String name;
+
+    public void paint() {
+        draw();
+    }
+
+    public void draw() {
+        System.out.println("Super Object");
+    }
+
+    public static void main(String[] args) {
+        SuperObject a = new SuperObject();
+        a.paint();
+    }
+}
+```
+
+실행 결과:
+
+```text
+Super Object
+```
+
+`a.paint()`를 호출하면 `paint()` 안에서 `draw()`가 실행된다.  
+이때 객체가 `SuperObject` 하나뿐이므로 `SuperObject`의 `draw()`가 실행된다.
+
+---
+
+### SubObject가 상속받은 경우
+
+```java
+class SuperObject {
+    protected String name;
+
+    public void paint() {
+        draw();
+    }
+
+    public void draw() {
+        System.out.println("Super Object");
+    }
+}
+
+public class SubObject extends SuperObject {
+    public void draw() {
+        System.out.println("Sub Object");
+    }
+
+    public static void main(String[] args) {
+        SuperObject b = new SubObject();
+        b.paint();
+    }
+}
+```
+
+실행 결과:
+
+```text
+Sub Object
+```
+
+여기서 참조 변수 `b`의 타입은 `SuperObject`이다.
+
+```java
+SuperObject b = new SubObject();
+```
+
+하지만 실제로 만들어진 객체는 `SubObject`이다.  
+따라서 `b.paint()`를 호출하면 `SuperObject`의 `paint()`가 실행되지만, 그 안에서 호출되는 `draw()`는 `SubObject`에서 오버라이딩한 `draw()`가 실행된다.
+
+이것이 동적 바인딩이다.
+
+---
+
+## 17. 동적 바인딩의 핵심
+
+동적 바인딩에서는 오버라이딩된 메소드가 항상 우선적으로 호출된다.
+
+```text
+참조 변수 타입: SuperObject
+실제 객체 타입: SubObject
+호출 메소드: b.paint()
+paint() 내부 호출: draw()
+실제로 실행되는 draw(): SubObject의 draw()
+```
+
+즉, `paint()`는 슈퍼 클래스에 있는 메소드이지만, `paint()` 안에서 호출한 `draw()`는 실제 객체 기준으로 결정된다.
+
+그래서 다음 코드의 결과는 `Super Object`가 아니라 `Sub Object`가 된다.
+
+```java
+SuperObject b = new SubObject();
+b.paint();
+```
+
+출력:
+
+```text
+Sub Object
+```
+
+슬라이드에 적힌 것처럼 `SuperObject`는 키워드가 아니라 예제에서 만든 클래스 이름이다.
+
+또한 상속받은 경우에는 오버라이딩된 메소드가 있으면 그 메소드가 실행된다.  
+이 부분이 오버라이딩과 다형성에서 중요한 부분이다.
