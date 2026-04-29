@@ -1,20 +1,24 @@
 # 이름: 이재인, 학번: 202330121
+
 작동 정상
 
 ```java
 import java.util.*;
+
 public class Midterm {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
         System.out.print("시작 수를 입력하세요: ");
         int start = sc.nextInt();
+
         System.out.print("끝 수를 입력하세요: ");
         int end = sc.nextInt();
+
         System.out.print("찾고자 하는 배수를 입력하세요: ");
         int multiple = sc.nextInt();
 
-        // 처음 수 보다 끝 수가 작다면 두 수 교환
+        // 처음 수보다 끝 수가 작다면 두 수 교환
         if (start > end) {
             int temp = start;
             start = end;
@@ -45,7 +49,11 @@ public class Midterm {
         sc.close();
     }
 }
-# Java 9주차 상속 정리
+```
+
+# Java 9주차 
+
+## //상속 정리
 
 ## 1. 클래스 상속이란?
 
@@ -126,8 +134,6 @@ red(3,4)
 | default | 같은 패키지일 때 접근 가능 |
 | `public` | 항상 접근 가능 |
 | `protected` | 같은 패키지이거나 상속 관계일 때 접근 가능 |
-
-### 접근 지정자 정리
 
 ```text
 private   : 서브 클래스에서도 직접 접근할 수 없다.
@@ -230,56 +236,12 @@ class Child extends Parent {
 
 `super()`를 직접 쓰지 않으면 컴파일러가 자동으로 `super();`를 넣는다.
 
-```java
-class Child extends Parent {
-    Child() {
-        // super(); 가 자동으로 들어간다
-        System.out.println("자식 생성자");
-    }
-}
-```
-
-하지만 부모 클래스에 기본 생성자가 없으면 오류가 발생한다.
+하지만 부모 클래스에 기본 생성자가 없으면 오류가 발생한다.  
 이 경우에는 반드시 `super(값)` 형태로 부모 생성자를 직접 호출해야 한다.
 
 ---
 
-## 6. Java 파일 실행 방법
-
-Java 파일을 실행하려면 먼저 컴파일을 해야 한다.
-
-```powershell
-javac Midterm.java
-```
-
-컴파일에 성공하면 `.class` 파일이 생성된다.
-
-```text
-Midterm.java   : 내가 작성한 소스 코드 파일
-Midterm.class  : 컴파일된 실행 파일
-```
-
-실행은 다음 명령어로 한다.
-
-```powershell
-java Midterm
-```
-
-주의할 점은 클래스 이름과 파일 이름이 같아야 한다는 것이다.
-
-```java
-public class Midterm
-```
-
-위처럼 클래스 이름이 `Midterm`이면 파일 이름은 반드시 다음과 같아야 한다.
-
-```text
-Midterm.java
-```
-
----
-
-## 7. 오류 정리
+## 6. 오류 정리
 
 ### ClassNotFoundException 오류
 
@@ -289,15 +251,11 @@ Error: Could not find or load main class Midterm
 
 이 오류는 보통 실행 위치가 잘못되었거나 클래스 이름을 잘못 입력했을 때 발생한다.
 
-해결 방법:
-
 ```powershell
 cd C:\Java2\Midterm
 javac Midterm.java
 java Midterm
 ```
-
----
 
 ### reached end of file while parsing 오류
 
@@ -325,18 +283,310 @@ public class Midterm {
 
 ---
 
-## 8. 핵심 요약
+## 7. 업캐스팅(upcasting) 개념
 
-상속은 부모 클래스의 멤버를 자식 클래스가 물려받는 것이다.
+업캐스팅은 서브 클래스 객체를 슈퍼 클래스 타입의 참조 변수에 대입하는 것이다.
 
-`private` 멤버는 자식 클래스에서도 직접 접근할 수 없다.
+쉽게 말하면 자식 객체를 부모 타입으로 바라보는 것이다.
 
-`public` 멤버는 어디서든 접근할 수 있다.
+```java
+class Person { }
 
-`protected` 멤버는 같은 패키지이거나 상속 관계일 때 접근할 수 있다.
+class Student extends Person { }
 
-자식 객체가 생성될 때는 부모 생성자가 먼저 실행되고, 그 다음 자식 생성자가 실행된다.
+Student s = new Student();
+Person p = s; // 업캐스팅
+```
 
-`super()`는 부모 생성자를 직접 호출할 때 사용한다.
+`Student`는 `Person`을 상속받았기 때문에 `Student` 객체를 `Person` 타입 변수에 넣을 수 있다.
 
-Java 파일은 `javac`로 컴파일한 뒤 `java`로 실행한다.
+슬라이드에서는 생물이 들어가는 박스에 사람이나 코끼리를 넣어도 문제가 없다고 설명한다.  
+사람이나 코끼리 모두 생물을 상속받은 것으로 볼 수 있기 때문이다.
+
+업캐스팅의 특징은 다음과 같다.
+
+```text
+서브 클래스의 레퍼런스를 슈퍼 클래스 레퍼런스에 대입한다.
+슈퍼 클래스 레퍼런스로 서브 클래스 객체를 가리키게 된다.
+```
+
+---
+
+## 8. 업캐스팅 시 접근 범위
+
+업캐스팅을 하면 실제 객체는 서브 클래스 객체이지만, 참조 변수의 타입은 슈퍼 클래스가 된다.
+
+```java
+class Person {
+    String name;
+}
+
+class Student extends Person {
+    String grade;
+}
+
+Person p = new Student(); // 업캐스팅
+```
+
+이 경우 실제 객체는 `Student` 객체이지만, 참조 변수 `p`의 타입은 `Person`이다.
+
+따라서 `p`를 통해서는 `Person` 클래스에 있는 멤버만 접근할 수 있다.
+
+```java
+p.name = "이재문"; // 가능
+p.grade = "A";   // 오류
+```
+
+`grade`는 `Student` 클래스의 멤버이기 때문에 `Person` 타입인 `p`로는 바로 접근할 수 없다.
+
+---
+
+## 9. 다운캐스팅(downcasting)
+
+다운캐스팅은 업캐스팅된 객체를 다시 원래의 서브 클래스 타입으로 되돌리는 것이다.
+
+```text
+슈퍼 클래스 레퍼런스를 서브 클래스 레퍼런스에 대입하는 것
+업캐스팅 된 것을 다시 원래 타입으로 되돌리는 것
+```
+
+다운캐스팅을 할 때는 반드시 명시적으로 타입 변환을 적어야 한다.
+
+```java
+class Person { }
+
+class Student extends Person { }
+
+Person p = new Student(); // 업캐스팅
+
+Student s = (Student)p; // 다운캐스팅
+```
+
+여기서 `p`는 `Person` 타입이지만 실제로는 `Student` 객체를 가리키고 있다.  
+그래서 `(Student)p`처럼 형변환을 해주면 다시 `Student` 타입으로 사용할 수 있다.
+
+---
+
+## 10. 다운캐스팅 사례
+
+```java
+class Person {
+    String name;
+
+    Person(String name) {
+        this.name = name;
+    }
+}
+
+class Student extends Person {
+    String grade;
+    String department;
+
+    Student(String name) {
+        super(name);
+    }
+}
+
+public class DowncastingEx {
+    public static void main(String[] args) {
+        Person p = new Student("이재문"); // 업캐스팅
+
+        Student s;
+        s = (Student)p; // 다운캐스팅
+
+        System.out.println(s.name); // 오류 없음
+        s.grade = "A";              // 오류 없음
+    }
+}
+```
+
+처음에는 `Student` 객체를 만들었지만 `Person` 타입 변수 `p`에 저장했다.  
+그래서 처음에는 `Person`의 멤버만 사용할 수 있다.
+
+이후에
+
+```java
+s = (Student)p;
+```
+
+처럼 다운캐스팅을 하면 다시 `Student` 타입으로 사용할 수 있다.
+
+그래서 `s.grade`처럼 `Student` 클래스에 있는 멤버도 접근할 수 있다.
+
+---
+
+## 11. 업캐스팅과 다운캐스팅 비교
+
+| 구분 | 설명 |
+|---|---|
+| 업캐스팅 | 서브 클래스 객체를 슈퍼 클래스 타입으로 변환 |
+| 다운캐스팅 | 슈퍼 클래스 타입을 다시 서브 클래스 타입으로 변환 |
+| 업캐스팅 형변환 | 자동으로 가능 |
+| 다운캐스팅 형변환 | 직접 타입을 적어야 함 |
+
+예시:
+
+```java
+Person p = new Student(); // 업캐스팅
+Student s = (Student)p;   // 다운캐스팅
+```
+
+업캐스팅은 자동으로 처리되지만, 다운캐스팅은 반드시 `(Student)`처럼 변환할 타입을 직접 적어야 한다.
+
+---
+
+## 12. 메소드 오버라이딩(Method Overriding)의 개념
+
+메소드 오버라이딩은 서브 클래스에서 슈퍼 클래스의 메소드를 중복 작성하는 것이다.
+
+즉, 부모 클래스에 이미 있는 메소드를 자식 클래스에서 같은 형태로 다시 만드는 것이다.
+
+```java
+class Parent {
+    void show() {
+        System.out.println("부모 클래스의 show()");
+    }
+}
+
+class Child extends Parent {
+    void show() {
+        System.out.println("자식 클래스의 show()");
+    }
+}
+```
+
+위 코드처럼 `Parent` 클래스에 있는 `show()` 메소드를 `Child` 클래스에서 다시 작성하면 오버라이딩이 된다.
+
+오버라이딩이 되면 슈퍼 클래스의 메소드는 무력화되고, 실제 실행될 때는 서브 클래스에서 오버라이딩한 메소드가 실행된다.
+
+```java
+Child c = new Child();
+c.show();
+```
+
+출력 결과:
+
+```text
+자식 클래스의 show()
+```
+
+슬라이드에서는 오버라이딩을 “메소드 무시하기”라고 번역하기도 한다고 설명한다.
+
+---
+
+## 13. 오버라이딩 조건
+
+오버라이딩을 하려면 슈퍼 클래스 메소드의 원형과 서브 클래스 메소드의 원형이 같아야 한다.
+
+같아야 하는 부분은 다음과 같다.
+
+```text
+메소드 이름
+인자 타입
+인자 개수
+리턴 타입
+```
+
+예시:
+
+```java
+class Parent {
+    int sum(int a, int b) {
+        return a + b;
+    }
+}
+
+class Child extends Parent {
+    int sum(int a, int b) {
+        return a + b + 10;
+    }
+}
+```
+
+위 예시는 메소드 이름, 인자 타입과 개수, 리턴 타입이 같기 때문에 오버라이딩이다.
+
+반대로 인자 개수가 달라지면 오버라이딩이 아니라 새로운 메소드를 하나 더 만든 것이다.
+
+---
+
+## 14. 오버라이딩된 메소드 실행
+
+오버라이딩된 메소드는 참조 변수의 타입이 아니라 실제 객체의 타입을 기준으로 실행된다.
+
+```java
+class Parent {
+    void print() {
+        System.out.println("Parent");
+    }
+}
+
+class Child extends Parent {
+    void print() {
+        System.out.println("Child");
+    }
+}
+
+Parent p = new Child();
+p.print();
+```
+
+출력 결과:
+
+```text
+Child
+```
+
+참조 변수의 타입은 `Parent`이지만 실제 객체는 `Child` 객체이다.  
+그래서 오버라이딩된 메소드는 `Child` 클래스의 `print()`가 실행된다.
+
+```text
+멤버 변수 접근은 참조 변수 타입 기준
+오버라이딩 메소드 실행은 실제 객체 타입 기준
+```
+
+---
+
+## 15. 오버라이딩을 사용하는 이유
+
+오버라이딩은 상속받은 기능을 서브 클래스에 맞게 고쳐 쓰기 위해 사용한다.
+
+부모 클래스에서 기본 동작을 정해두고, 자식 클래스에서 필요한 부분만 다르게 구현할 수 있다.
+
+```java
+class Animal {
+    void sound() {
+        System.out.println("동물이 소리를 낸다");
+    }
+}
+
+class Dog extends Animal {
+    void sound() {
+        System.out.println("강아지가 멍멍 짖는다");
+    }
+}
+
+class Cat extends Animal {
+    void sound() {
+        System.out.println("고양이가 야옹 운다");
+    }
+}
+```
+
+실행:
+
+```java
+Animal a1 = new Dog();
+Animal a2 = new Cat();
+
+a1.sound();
+a2.sound();
+```
+
+출력:
+
+```text
+강아지가 멍멍 짖는다
+고양이가 야옹 운다
+```
+
+이처럼 같은 `sound()` 메소드라도 실제 객체가 무엇인지에 따라 실행 결과가 달라진다.
